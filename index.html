@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carta de invitación - Cumpleaños de Pierito</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Fuente infantil -->
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <!-- QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        :root {
+            --rojo: #e63946;
+            --azul: #1d4ed8;
+            --celeste: #78d6ff;
+            --amarillo: #ffd60a;
+            --naranja: #fb8500;
+            --verde-oscuro: #057a55;
+            --texto: #344054;
+            --oscuro: #1f2937;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Baloo 2', cursive;
+            color: var(--texto);
+            background: linear-gradient(180deg, #78d6ff 0%, #b7ecff 42%, #fff1b8 100%);
+            overflow-x: hidden;
+        }
+
+        .escenario {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .contenido { position: relative; z-index: 2; }
+
+        .nube {
+            position: absolute;
+            width: 145px;
+            height: 55px;
+            background: #ffffff;
+            border-radius: 999px;
+            opacity: 0.92;
+            animation: moverNube 22s linear infinite;
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+        }
+
+        .nube::before,
+        .nube::after {
+            content: '';
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+        }
+
+        .nube::before { width: 68px; height: 68px; left: 22px; top: -34px; }
+        .nube::after { width: 78px; height: 78px; right: 18px; top: -42px; }
+        .nube-1 { left: -180px; top: 70px; animation-duration: 26s; }
+        .nube-2 { left: -220px; top: 210px; animation-duration: 34s; animation-delay: 5s; transform: scale(0.75); }
+        .nube-3 { left: -250px; top: 410px; animation-duration: 40s; animation-delay: 9s; transform: scale(0.62); }
+
+        @keyframes moverNube {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(100vw + 350px)); }
+        }
+
+        .moneda-fondo {
+            position: absolute;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 32% 28%, #fff7a8, var(--amarillo) 45%, #f59e0b 90%);
+            border: 5px solid #f59e0b;
+            color: #9a5b00;
+            font-size: 1.5rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 18px rgba(245, 158, 11, 0.25);
+            animation: girarMoneda 2.6s infinite ease-in-out;
+        }
+
+        .moneda-1 { left: 7%; top: 18%; }
+        .moneda-2 { right: 7%; top: 16%; animation-delay: 0.4s; }
+        .moneda-3 { left: 12%; bottom: 18%; animation-delay: 0.8s; }
+        .moneda-4 { right: 18%; bottom: 12%; animation-delay: 1.2s; }
+
+        @keyframes girarMoneda {
+            0%, 100% { transform: translateY(0) rotateY(0deg); }
+            50% { transform: translateY(-16px) rotateY(180deg); }
+        }
+
+        .intro-audio {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: linear-gradient(180deg, rgba(120, 214, 255, 0.97), rgba(255, 241, 184, 0.97));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 22px;
+        }
+
+        .intro-card {
+            width: min(100%, 620px);
+            background: #ffffff;
+            border: 8px solid #ffffff;
+            border-radius: 38px;
+            padding: 36px;
+            text-align: center;
+            box-shadow: 0 26px 65px rgba(31, 41, 55, 0.24);
+        }
+
+        .intro-card h1 {
+            color: var(--rojo);
+            font-size: clamp(2.4rem, 6vw, 4.2rem);
+            font-weight: 900;
+            line-height: 0.95;
+            text-shadow: 4px 4px 0 #fff2b8;
+        }
+
+        .intro-card p {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #475467;
+            line-height: 1.2;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 38px 15px 70px;
+        }
+
+        .panel-principal {
+            background: rgba(255, 255, 255, 0.95);
+            border: 7px solid #ffffff;
+            border-radius: 40px;
+            box-shadow: 0 26px 65px rgba(31, 41, 55, 0.18);
+            padding: 34px;
+            overflow: hidden;
+        }
+
+        .badge-evento {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff8d6;
+            color: #9a5b00;
+            border: 4px solid var(--amarillo);
+            border-radius: 999px;
+            padding: 9px 18px;
+            font-size: 1.22rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+
+        .titulo-principal {
+            color: var(--rojo);
+            font-size: clamp(2.7rem, 7vw, 6.3rem);
+            font-weight: 900;
+            line-height: 0.92;
+            letter-spacing: -1px;
+            text-shadow: 4px 4px 0 #ffffff, 8px 8px 0 rgba(29, 78, 216, 0.25);
+        }
+
+        .subtitulo {
+            color: var(--azul);
+            font-size: clamp(1.5rem, 3vw, 2.4rem);
+            font-weight: 900;
+            line-height: 1.08;
+        }
+
+        .texto {
+            font-size: clamp(1.18rem, 2vw, 1.5rem);
+            line-height: 1.25;
+            color: #475467;
+            font-weight: 700;
+        }
+
+        .btn-fiesta {
+            border: 0;
+            border-radius: 999px;
+            padding: 14px 26px;
+            color: white;
+            background: linear-gradient(135deg, var(--rojo), var(--naranja));
+            font-size: 1.16rem;
+            font-weight: 900;
+            box-shadow: 0 14px 28px rgba(230, 57, 70, 0.28);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-fiesta:hover {
+            color: white;
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 18px 34px rgba(230, 57, 70, 0.35);
+        }
+
+        .btn-azul { background: linear-gradient(135deg, var(--azul), #38bdf8); box-shadow: 0 14px 28px rgba(29, 78, 216, 0.28); }
+        .btn-verde { background: linear-gradient(135deg, var(--verde-oscuro), #34d399); box-shadow: 0 14px 28px rgba(5, 122, 85, 0.28); }
+
+        .carta-wrapper { display: flex; justify-content: center; perspective: 1300px; }
+
+        .carta-clip {
+            width: min(100%, 445px);
+            min-height: 590px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.85s ease;
+            cursor: pointer;
+        }
+
+        .carta-clip.volteada { transform: rotateY(180deg); }
+
+        .carta-cara {
+            position: absolute;
+            inset: 0;
+            border-radius: 36px;
+            backface-visibility: hidden;
+            overflow: hidden;
+            padding: 32px;
+            border: 8px solid #ffffff;
+            box-shadow: 0 24px 55px rgba(31, 41, 55, 0.22);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .carta-frente {
+            background: linear-gradient(180deg, #78d6ff 0%, #b7ecff 45%, #ffe8a3 100%);
+            color: var(--azul);
+            position: relative;
+            justify-content: flex-start;
+            padding-top: 28px;
+            padding-bottom: 0;
+        }
+        .contenido-frente-carta {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 145px; /* espacio reservado para el tubo */
+        }
+        .carta-atras { background: linear-gradient(135deg, var(--rojo), #ff7b54); color: #ffffff; transform: rotateY(180deg); }
+
+        .bloque-pregunta {
+            width: 88px;
+            height: 88px;
+            background: linear-gradient(135deg, #ffd60a, #fb8500);
+            border: 6px solid #b45309;
+            border-radius: 18px;
+            color: #7c2d12;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.2rem;
+            font-weight: 900;
+            box-shadow: 0 10px 0 #92400e;
+            margin-bottom: 24px;
+            animation: saltarBloque 2s infinite ease-in-out;
+        }
+
+        .carta-frente h2 {
+            color: var(--rojo);
+            font-size: 2.05rem;
+            font-weight: 900;
+            margin: 6px 0 0 0;
+        }
+
+        .carta-frente h1 {
+            color: var(--azul);
+            font-size: 4.8rem;
+            font-weight: 900;
+            line-height: 0.92;
+            margin: 10px 0 0;
+            text-shadow: 4px 4px 0 #ffffff;
+        }
+        .texto-frente-carta {
+            font-size: 1.28rem;
+            font-weight: 800;
+            color: #475467;
+            text-align: center;
+            margin-top: 14px;
+            margin-bottom: 0;
+            max-width: 90%;
+            line-height: 1.15;
+        }
+        .edad-carta {
+            width: 128px;
+            height: 128px;
+            border-radius: 32px;
+            background: linear-gradient(135deg, #ffd60a, #fb8500);
+            color: #7c2d12;
+            border: 7px solid #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5.3rem;
+            font-weight: 900;
+            margin: 18px 0;
+            transform: rotate(-5deg);
+            box-shadow: 0 18px 34px rgba(251, 133, 0, 0.34);
+        }
+
+        .moneda-carta {
+            position: absolute;
+            right: 32px;
+            top: 32px;
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 32% 28%, #fff7a8, #ffd60a 45%, #f59e0b 90%);
+            border: 5px solid #f59e0b;
+            color: #9a5b00;
+            font-size: 1.7rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: girarMoneda 2.2s infinite ease-in-out;
+        }
+
+        .tuberia-carta {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 130px;
+            height: 92px;
+            background: linear-gradient(90deg, #057a55, #34d399, #057a55);
+            border: 6px solid #057a55;
+            border-radius: 22px 22px 0 0;
+            z-index: 1;
+        }
+
+        .tuberia-carta::before {
+            content: '';
+            position: absolute;
+            left: -18px;
+            right: -18px;
+            top: -35px;
+            height: 46px;
+            background: linear-gradient(90deg, #057a55, #34d399, #057a55);
+            border: 6px solid #057a55;
+            border-radius: 20px;
+        }
+
+        .estrella-carta { font-size: 3.4rem; animation: girarEstrella 3s linear infinite; }
+        .carta-atras h2 { font-size: 2.55rem; font-weight: 900; line-height: 1; text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.14); }
+        .texto-invitacion-carta { font-size: 1.32rem; font-weight: 800; line-height: 1.18; margin-top: 16px; }
+
+        .datos-carta {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.18);
+            border: 3px solid rgba(255, 255, 255, 0.55);
+            border-radius: 24px;
+            padding: 18px;
+            margin-top: 18px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            text-align: left;
+        }
+
+        .datos-carta div { margin-bottom: 10px; }
+        .datos-carta div:last-child { margin-bottom: 0; }
+
+        @keyframes saltarBloque { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+        @keyframes girarEstrella { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .seccion { padding: 34px 0 64px; }
+        .titulo-seccion { color: var(--rojo); font-size: clamp(2rem, 5vw, 3.8rem); font-weight: 900; line-height: 1; text-shadow: 3px 3px 0 #ffffff; }
+
+        .detalle-card,
+        .media-card,
+        .qr-card {
+            background: #ffffff;
+            border-radius: 34px;
+            border: 5px solid #edf2ff;
+            box-shadow: 0 18px 38px rgba(31, 41, 55, 0.10);
+            padding: 28px;
+            height: 100%;
+        }
+
+        .detalle-icono {
+            width: 86px;
+            height: 86px;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.1rem;
+            margin: 0 auto 14px;
+        }
+
+        .bg-rojo-suave { background: #ffe1e5; }
+        .bg-azul-suave { background: #dbeafe; }
+        .bg-verde-suave { background: #dcfce7; }
+        .bg-amarillo-suave { background: #fef9c3; }
+        .detalle-card h3 { color: var(--azul); font-weight: 900; font-size: 1.75rem; }
+        .detalle-card p { font-size: 1.24rem; color: #475467; line-height: 1.2; font-weight: 700; margin: 0; }
+
+        .video-fiesta {
+            width: 100%;
+            border-radius: 28px;
+            border: 7px solid #ffffff;
+            background: #111827;
+            box-shadow: 0 18px 36px rgba(31, 41, 55, 0.20);
+            max-height: 480px;
+        }
+
+        .video-placeholder {
+            background: linear-gradient(135deg, #1d4ed8, #38bdf8);
+            color: white;
+            border-radius: 28px;
+            padding: 36px;
+            text-align: center;
+            min-height: 260px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-weight: 900;
+        }
+
+        .video-placeholder .icono { font-size: 4rem; }
+
+        .qr-box {
+            width: 220px;
+            height: 220px;
+            margin: 0 auto;
+            padding: 12px;
+            background: #ffffff;
+            border: 5px solid var(--azul);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-box img,
+        .qr-box canvas { border-radius: 12px; }
+
+        .audio-panel {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 60;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .audio-btn {
+            border: 0;
+            border-radius: 999px;
+            padding: 12px 18px;
+            color: white;
+            background: linear-gradient(135deg, var(--rojo), var(--azul));
+            font-weight: 900;
+            box-shadow: 0 14px 28px rgba(31, 41, 55, 0.28);
+        }
+
+        .audio-aviso {
+            position: fixed;
+            right: 18px;
+            bottom: 82px;
+            max-width: 310px;
+            background: #ffffff;
+            color: #475467;
+            border: 3px solid #dbeafe;
+            border-radius: 18px;
+            padding: 12px 14px;
+            font-size: 0.98rem;
+            font-weight: 800;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            display: none;
+            z-index: 61;
+        }
+
+        .footer-fiesta {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px 30px 0 0;
+            padding: 20px;
+            font-size: 1.18rem;
+            color: #475467;
+            box-shadow: 0 -12px 28px rgba(0, 0, 0, 0.08);
+        }
+
+        .oculto { display: none; }
+
+        @media (max-width: 992px) {
+            .panel-principal { padding: 24px; }
+            .carta-clip { min-height: 560px; }
+        }
+
+        @media (max-width: 576px) {
+            .panel-principal,
+            .detalle-card,
+            .media-card,
+            .qr-card { border-radius: 26px; padding: 22px; }
+            .carta-clip { min-height: 535px; }
+            .carta-cara { padding: 24px; border-radius: 28px; }
+            .carta-frente h1 { font-size: 3.8rem; }
+            .carta-atras h2 { font-size: 2rem; }
+            .texto-invitacion-carta { font-size: 1.13rem; }
+            .datos-carta { font-size: 1rem; }
+            .audio-panel { left: 12px; right: 12px; bottom: 12px; justify-content: center; }
+            .contenido-frente-carta {
+                padding-bottom: 125px;
+            }
+
+            .texto-frente-carta {
+                font-size: 1.08rem;
+                max-width: 95%;
+            }
+
+            .tuberia-carta {
+                width: 110px;
+                height: 82px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Archivos locales esperados:
+         musica-cumple.mp3
+         video-cumple.mp4
+         img/poster-video.jpg opcional
+    -->
+    <audio id="audioFiesta" loop preload="auto">
+        <source src="musica-cumple.mp3" type="audio/mpeg">
+        <source src="musica-cumple.ogg" type="audio/ogg">
+    </audio>
+
+    <div class="intro-audio" id="introAudio">
+        <div class="intro-card">
+            <div class="fs-1 mb-2">🎮🎂🎵</div>
+            <h1>¡Bienvenido a la invitación de Pierito!</h1>
+            <p class="mt-3">Presiona el botón para abrir la carta, activar la música y empezar la aventura.</p>
+            <button class="btn btn-fiesta mt-3" id="btnEntrarFiesta">Entrar a la aventura</button>
+        </div>
+    </div>
+
+    <div class="audio-panel">
+        <button class="audio-btn" id="btnMusica">🎵 Música</button>
+        <button class="audio-btn" id="btnVideo">🎬 Ver video</button>
+    </div>
+    <div class="audio-aviso" id="audioAviso">
+        Coloca <strong>musica-cumple.mp3</strong> y/o <strong>video-cumple.mp4</strong> en la misma carpeta del index.html.
+    </div>
+
+    <div class="escenario" aria-hidden="true">
+        <div class="nube nube-1"></div>
+        <div class="nube nube-2"></div>
+        <div class="nube nube-3"></div>
+        <div class="moneda-fondo moneda-1">★</div>
+        <div class="moneda-fondo moneda-2">★</div>
+        <div class="moneda-fondo moneda-3">★</div>
+        <div class="moneda-fondo moneda-4">★</div>
+    </div>
+
+    <main class="contenido">
+        <section class="hero">
+            <div class="container">
+                <div class="panel-principal">
+                    <div class="row align-items-center g-4">
+                        <div class="col-lg-6 text-center text-lg-start">
+                            <span class="badge-evento">🎮 Mi cumpleaños</span>
+                            <h1 class="titulo-principal">Pierito cumple 6 añitos</h1>
+                            <p class="subtitulo mt-3">Una misión especial llena de juegos, alegría y diversión.</p>
+                            <p class="texto mt-3">
+                                Te invitamos a una gran aventura para celebrar el cumpleaños de Pierito.
+                                Habrá grandes juegos, sorpresas y mucha felicidad.
+                            </p>
+
+                            <div class="d-flex flex-wrap gap-3 mt-4 justify-content-center justify-content-lg-start">
+                                <button class="btn btn-fiesta" id="btnAbrirCarta">Abrir carta</button>
+                                <button class="btn btn-fiesta btn-azul" id="btnVerDetalles">Ver detalles</button>
+                                <button class="btn btn-fiesta btn-verde" id="btnCopiarDireccion">Copiar dirección</button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="carta-wrapper">
+                                <div class="carta-clip" id="cartaClipMario">
+                                    <div class="carta-cara carta-frente">
+                                        <div class="moneda-carta">★</div>
+
+                                        <div class="contenido-frente-carta">
+                                            <div class="bloque-pregunta">?</div>
+                                            <h2>¡Invitación especial!</h2>
+                                            <h1>Pierito</h1>
+                                            <div class="edad-carta">6</div>
+                                            <p class="texto texto-frente-carta">🎮 Haz clic para descubrir la misión 🎉</p>
+                                        </div>
+
+                                        <div class="tuberia-carta"></div>
+                                    </div>
+
+                                    <div class="carta-cara carta-atras">
+                                        <div class="estrella-carta">⭐</div>
+                                        <h2>¡Misión cumpleaños!</h2>
+                                        <p class="texto-invitacion-carta">
+                                            Te invitamos a celebrar los 6 añitos de Pierito en una aventura llena de alegría,
+                                            juegos, sorpresas y mucha diversión.
+                                        </p>
+
+                                        <div class="datos-carta">
+                                            <div><strong>🎂 Cumpleañero:</strong> Pierito</div>
+                                            <div><strong>🎈 Edad:</strong> 6 añitos</div>
+                                            <div><strong>⏰ Hora:</strong> 11:00 a. m.</div>
+                                            <div><strong>📍 Dirección:</strong> Av. Primavera 105, San Borja 15037</div>
+                                            <div><strong>🏰 Diversión:</strong> ¡Habrá grandes juegos!</div>
+                                        </div>
+
+                                        <button class="btn btn-light rounded-pill fw-bold mt-3" id="btnVolverCarta">Volver a la portada</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <!-- <small class="text-muted fw-bold">
+                            Temática inspirada en videojuegos de plataformas: monedas, bloques, tuberías y estrellas.
+                        </small> -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container seccion oculto" id="seccionDetalles">
+            <div class="text-center mb-4">
+                <h2 class="titulo-seccion">Detalles de la fiesta</h2>
+                <p class="texto">Para que todos lleguen listos a la aventura.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="detalle-card text-center">
+                        <div class="detalle-icono bg-rojo-suave">🎂</div>
+                        <h3>Cumpleañero</h3>
+                        <p>Pierito celebra sus 6 añitos.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="detalle-card text-center">
+                        <div class="detalle-icono bg-azul-suave">⏰</div>
+                        <h3>Hora</h3>
+                        <p>La aventura empieza a las 2:00 p. m.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="detalle-card text-center">
+                        <div class="detalle-icono bg-verde-suave">📍</div>
+                        <h3>Dirección</h3>
+                        <p>Av. Primavera 105, San Borja 15037.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="detalle-card text-center">
+                        <div class="detalle-icono bg-amarillo-suave">🏰</div>
+                        <h3>Juegos</h3>
+                        <p>¡Habrá grandes juegos para todos!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container seccion oculto" id="seccionQRVideo">
+            <div class="row g-4 align-items-stretch">
+                <div class="col-lg-5">
+                    <div class="qr-card text-center">
+                        <h2 class="titulo-seccion fs-1">QR de ubicación</h2>
+                        <p class="texto">Escanea el código para abrir la dirección en Google Maps.</p>
+                        <div class="qr-box mt-3" id="qrDireccion"></div>
+                        <p class="texto mt-3 mb-0"><strong>Av. Primavera 105, San Borja 15037</strong></p>
+                        <a class="btn btn-fiesta btn-verde mt-3"
+                           href="https://www.google.com/maps/search/?api=1&query=Av.%20Primavera%20105,%20San%20Borja%2015037"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Abrir mapa
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="media-card">
+                        <h2 class="titulo-seccion fs-1">Video de la invitación</h2>
+                        <p class="texto">
+                            Puedes colocar un video corto de Pierito o un clip de invitación con el nombre
+                            <strong>video-cumple.mp4</strong>.
+                        </p>
+
+                        <video id="videoFiesta" class="video-fiesta mt-2" controls playsinline poster="img/poster-video.jpg">
+                            <source src="video-cumple.mp4" type="video/mp4">
+                            Tu navegador no puede reproducir video HTML5.
+                        </video>
+
+                        <div class="video-placeholder mt-2" id="videoPlaceholder">
+                            <div class="icono">🎬</div>
+                            <h3>Video no encontrado</h3>
+                            <p>Coloca el archivo <strong>video-cumple.mp4</strong> junto al index.html.</p>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-3 mt-3">
+                            <button class="btn btn-fiesta btn-azul" id="btnReproducirVideo">Reproducir video</button>
+                            <button class="btn btn-fiesta" id="btnPausarVideo">Pausar video</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container seccion oculto" id="seccionMensaje">
+            <div class="panel-principal text-center">
+                <div class="fs-1 mb-2">🎉</div>
+                <h2 class="titulo-seccion">¡Estás invitado!</h2>
+                <p class="subtitulo mt-3">Pierito estará muy feliz de compartir contigo esta gran aventura.</p>
+                <p class="texto mt-3">Ven con muchas ganas de jugar, reír y celebrar. Tu presencia hará que esta fiesta sea aún más especial.</p>
+                <!-- <button class="btn btn-fiesta mt-3" id="btnCelebrarFinal">¡Confirmar aventura!</button> -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-fiesta text-center">
+        Cumpleaños de <strong>Pierito</strong> · 6 añitos · 2:00 p. m. · Av. Primavera 105, San Borja 15037 🎂
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            inicializarEventos();
+            generarQRDireccion();
+            intentarIniciarMusicaAutomatica();
+            validarVideoLocal();
+            return;
+        });
+
+        function inicializarEventos() {
+            $('#btnEntrarFiesta').on('click', function () { entrarFiesta(); return; });
+            $('#cartaClipMario, #btnAbrirCarta').on('click', function () { voltearCartaClip(); return; });
+            $('#btnVolverCarta').on('click', function (event) { event.stopPropagation(); voltearCartaClip(); return; });
+            $('#btnVerDetalles').on('click', function () { mostrarDetalles(); return; });
+            $('#btnCopiarDireccion').on('click', function () { copiarDireccion(); return; });
+            $('#btnMusica').on('click', function () { alternarMusica(); return; });
+            $('#btnVideo').on('click', function () { mostrarVideo(); return; });
+            $('#btnReproducirVideo').on('click', function () { reproducirVideo(); return; });
+            $('#btnPausarVideo').on('click', function () { pausarVideo(); return; });
+            // $('#btnCelebrarFinal').on('click', function () { celebrar(); return; });
+            return;
+        }
+
+        function entrarFiesta() {
+            $('#introAudio').fadeOut(350);
+            iniciarMusica();
+            celebrar();
+            return;
+        }
+
+        function intentarIniciarMusicaAutomatica() {
+            var audio = document.getElementById('audioFiesta');
+            if (!audio) return;
+
+            audio.volume = 0.45;
+            audio.play().then(function () {
+                $('#btnMusica').text('⏸ Pausar música');
+                $('#introAudio').delay(900).fadeOut(350);
+                return;
+            }).catch(function () {
+                $('#introAudio').show();
+                return;
+            });
+            return;
+        }
+
+        function iniciarMusica() {
+            var audio = document.getElementById('audioFiesta');
+            if (!audio) return;
+
+            audio.volume = 0.45;
+            audio.play().then(function () {
+                $('#btnMusica').text('⏸ Pausar música');
+                $('#audioAviso').fadeOut(200);
+                return;
+            }).catch(function () {
+                mostrarAviso('No se pudo iniciar la música. Verifica que exista musica-cumple.mp3.');
+                return;
+            });
+            return;
+        }
+
+        function alternarMusica() {
+            var audio = document.getElementById('audioFiesta');
+            if (!audio) return;
+
+            if (audio.paused) iniciarMusica();
+            else {
+                audio.pause();
+                $('#btnMusica').text('🎵 Música');
+            }
+            return;
+        }
+
+        function voltearCartaClip() {
+            $('#cartaClipMario').toggleClass('volteada');
+            celebrar();
+            return;
+        }
+
+        function mostrarDetalles() {
+            $('#seccionDetalles, #seccionQRVideo, #seccionMensaje').slideDown(650);
+            setTimeout(function () {
+                $('html, body').animate({ scrollTop: $('#seccionDetalles').offset().top - 20 }, 650);
+                return;
+            }, 350);
+            celebrar();
+            return;
+        }
+
+        function mostrarVideo() {
+            $('#seccionQRVideo').slideDown(650);
+            setTimeout(function () {
+                $('html, body').animate({ scrollTop: $('#seccionQRVideo').offset().top - 20 }, 650);
+                return;
+            }, 350);
+            return;
+        }
+
+        function reproducirVideo() {
+            var video = document.getElementById('videoFiesta');
+            if (!video) return;
+
+            video.play().catch(function () {
+                mostrarAviso('No se pudo reproducir el video. Verifica que exista video-cumple.mp4.');
+                return;
+            });
+            return;
+        }
+
+        function pausarVideo() {
+            var video = document.getElementById('videoFiesta');
+            if (!video) return;
+            video.pause();
+            return;
+        }
+
+        function validarVideoLocal() {
+            var video = document.getElementById('videoFiesta');
+            if (!video) return;
+
+            video.addEventListener('error', function () {
+                $('#videoFiesta').hide();
+                $('#videoPlaceholder').css('display', 'flex');
+                return;
+            }, true);
+            return;
+        }
+
+        function generarQRDireccion() {
+            var urlMapa = 'https://www.google.com/maps/search/?api=1&query=Av.%20Primavera%20105,%20San%20Borja%2015037';
+
+            if (typeof QRCode !== 'function') {
+                $('#qrDireccion').html('<strong>QR no disponible</strong>');
+                return;
+            }
+
+            $('#qrDireccion').empty();
+
+            new QRCode(document.getElementById('qrDireccion'), {
+                text: urlMapa,
+                width: 180,
+                height: 180,
+                colorDark: '#1d4ed8',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            return;
+        }
+
+        function copiarDireccion() {
+            var direccion = 'Av. Primavera 105, San Borja 15037';
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(direccion).then(function () {
+                    mostrarAviso('Dirección copiada: ' + direccion);
+                    return;
+                }).catch(function () {
+                    mostrarAviso('Dirección: ' + direccion);
+                    return;
+                });
+            } else {
+                mostrarAviso('Dirección: ' + direccion);
+            }
+            return;
+        }
+
+        function mostrarAviso(mensaje) {
+            $('#audioAviso').html(mensaje).fadeIn(250);
+            setTimeout(function () {
+                $('#audioAviso').fadeOut(300);
+                return;
+            }, 4200);
+            return;
+        }
+
+        function celebrar() {
+            if (typeof confetti !== 'function') return;
+
+            confetti({
+                particleCount: 120,
+                spread: 78,
+                origin: { y: 0.62 }
+            });
+            return;
+        }
+    </script>
+</body>
+</html>
