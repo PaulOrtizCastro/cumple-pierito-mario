@@ -673,7 +673,7 @@
                             <div class="d-flex flex-wrap gap-3 mt-4 justify-content-center justify-content-lg-start">
                                 <button class="btn btn-fiesta" id="btnAbrirCarta">Abrir carta</button>
                                 <button class="btn btn-fiesta btn-azul" id="btnVerDetalles">Ver detalles</button>
-                                <button class="btn btn-fiesta btn-verde" id="btnCopiarDireccion">Copiar dirección</button>
+                                <button class="btn btn-fiesta btn-verde" id="btnVerDireccion">Ver dirección</button>
                             </div>
                         </div>
 
@@ -860,11 +860,18 @@
         });
 
         function inicializarEventos() {
+            $('#videoFiesta').on('play', function () {
+                pausarMusica();
+                return;
+            });
             $('#btnEntrarFiesta').on('click', function () { entrarFiesta(); return; });
             $('#cartaClipMario, #btnAbrirCarta').on('click', function () { voltearCartaClip(); return; });
             $('#btnVolverCarta').on('click', function (event) { event.stopPropagation(); voltearCartaClip(); return; });
-            $('#btnVerDetalles').on('click', function () { mostrarDetalles(); return; });
-            $('#btnCopiarDireccion').on('click', function () { copiarDireccion(); return; });
+            $('#btnVerDetalles').on('click', function () {
+                mostrarDetalles();
+                return;
+            });
+            $('#btnVerDireccion').on('click', function () { mostrarDireccion(); return; });
             $('#btnMusica').on('click', function () { alternarMusica(); return; });
             $('#btnVideo').on('click', function () { mostrarVideo(); return; });
             $('#btnReproducirVideo').on('click', function () { reproducirVideo(); return; });
@@ -872,7 +879,25 @@
             // $('#btnCelebrarFinal').on('click', function () { celebrar(); return; });
             return;
         }
+        function mostrarDireccion() {
+            $('#seccionQRVideo').show();
 
+            $('html, body').scrollTop($('#seccionQRVideo').offset().top - 20);
+
+            return;
+        }
+        function pausarMusica() {
+            var audio = document.getElementById('audioFiesta');
+
+            if (!audio) {
+                return;
+            }
+
+            audio.pause();
+            $('#btnMusica').text('🎵 Música');
+
+            return;
+        }
         function entrarFiesta() {
             $('#introAudio').fadeOut(350);
             iniciarMusica();
@@ -930,33 +955,67 @@
             return;
         }
 
+        // function mostrarDetalles() {
+        //     $('#seccionDetalles, #seccionQRVideo, #seccionMensaje').slideDown(650);
+        //     setTimeout(function () {
+        //         $('html, body').animate({ scrollTop: $('#seccionDetalles').offset().top - 20 }, 650);
+        //         return;
+        //     }, 350);
+        //     celebrar();
+        //     return;
+        // }
         function mostrarDetalles() {
-            $('#seccionDetalles, #seccionQRVideo, #seccionMensaje').slideDown(650);
-            setTimeout(function () {
-                $('html, body').animate({ scrollTop: $('#seccionDetalles').offset().top - 20 }, 650);
-                return;
-            }, 350);
+            $('#seccionDetalles, #seccionQRVideo, #seccionMensaje').show();
+
+            $('html, body').scrollTop($('#seccionDetalles').offset().top - 20);
+
             celebrar();
+
             return;
         }
 
+        // function mostrarVideo() {
+        //     $('#seccionQRVideo').slideDown(650);
+        //     setTimeout(function () {
+        //         $('html, body').animate({ scrollTop: $('#seccionQRVideo').offset().top - 20 }, 650);
+        //         return;
+        //     }, 350);
+        //     return;
+        // }
         function mostrarVideo() {
-            $('#seccionQRVideo').slideDown(650);
-            setTimeout(function () {
-                $('html, body').animate({ scrollTop: $('#seccionQRVideo').offset().top - 20 }, 650);
-                return;
-            }, 350);
+            pausarMusica();
+
+            $('#seccionQRVideo').show();
+
+            $('html, body').scrollTop($('#seccionQRVideo').offset().top - 20);
+
             return;
         }
 
+        // function reproducirVideo() {
+        //     var video = document.getElementById('videoFiesta');
+        //     if (!video) return;
+
+        //     video.play().catch(function () {
+        //         mostrarAviso('No se pudo reproducir el video. Verifica que exista video-cumple.mp4.');
+        //         return;
+        //     });
+        //     return;
+        // }
         function reproducirVideo() {
             var video = document.getElementById('videoFiesta');
-            if (!video) return;
+
+            pausarMusica();
+
+            if (!video) {
+                return;
+            }
 
             video.play().catch(function () {
                 mostrarAviso('No se pudo reproducir el video. Verifica que exista video-cumple.mp4.');
                 return;
             });
+
             return;
         }
 
