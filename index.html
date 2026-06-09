@@ -224,7 +224,7 @@
 
         .carta-clip {
             width: min(100%, 445px);
-            min-height: 590px;
+            min-height: 630px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.85s ease;
@@ -374,20 +374,7 @@
         .carta-atras h2 { font-size: 2.55rem; font-weight: 900; line-height: 1; text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.14); }
         .texto-invitacion-carta { font-size: 1.32rem; font-weight: 800; line-height: 1.18; margin-top: 16px; }
 
-        .datos-carta {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.18);
-            border: 3px solid rgba(255, 255, 255, 0.55);
-            border-radius: 24px;
-            padding: 18px;
-            margin-top: 18px;
-            font-size: 1.15rem;
-            font-weight: 800;
-            text-align: left;
-        }
-
-        .datos-carta div { margin-bottom: 10px; }
-        .datos-carta div:last-child { margin-bottom: 0; }
+ 
 
         @keyframes saltarBloque { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
         @keyframes girarEstrella { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -516,23 +503,98 @@
 
         .oculto { display: none; }
 
+        
+
         @media (max-width: 992px) {
-            .panel-principal { padding: 24px; }
-            .carta-clip { min-height: 560px; }
+            .panel-principal {
+                padding: 24px;
+            }
+
+            .carta-clip {
+                min-height: 620px;
+            }
         }
 
         @media (max-width: 576px) {
             .panel-principal,
             .detalle-card,
             .media-card,
-            .qr-card { border-radius: 26px; padding: 22px; }
-            .carta-clip { min-height: 535px; }
-            .carta-cara { padding: 24px; border-radius: 28px; }
-            .carta-frente h1 { font-size: 3.8rem; }
-            .carta-atras h2 { font-size: 2rem; }
-            .texto-invitacion-carta { font-size: 1.13rem; }
-            .datos-carta { font-size: 1rem; }
-            .audio-panel { left: 12px; right: 12px; bottom: 12px; justify-content: center; }
+            .qr-card {
+                border-radius: 26px;
+                padding: 22px;
+            }
+
+            .carta-clip {
+                min-height: 610px;
+            }
+
+            .carta-cara {
+                padding: 20px;
+                border-radius: 28px;
+            }
+
+            .carta-frente h1 {
+                font-size: 3.8rem;
+            }
+
+            .carta-atras {
+                padding: 18px 20px 16px 20px;
+            }
+
+            .carta-atras h2 {
+                font-size: 1.8rem;
+                line-height: 0.95;
+                margin-bottom: 10px;
+            }
+
+            .estrella-carta {
+                font-size: 2.35rem;
+                margin-bottom: 4px;
+            }
+
+            .texto-invitacion-carta {
+                font-size: 0.96rem;
+                line-height: 1.13;
+                margin-bottom: 10px;
+            }
+
+            .datos-carta {
+                font-size: 0.88rem;
+                padding: 12px;
+                margin-top: 4px;
+                border-radius: 20px;
+            }
+
+            .dato-carta {
+                gap: 8px;
+                margin-bottom: 7px;
+            }
+
+            .dato-icono {
+                width: 21px;
+                min-width: 21px;
+                line-height: 1.22;
+            }
+
+            .dato-texto {
+                line-height: 1.2;
+            }
+
+            .dato-direccion .dato-texto {
+                line-height: 1.18;
+            }
+
+            .dato-direccion small {
+                font-size: 0.78rem;
+                line-height: 1.15;
+            }
+
+            #btnVolverCarta {
+                margin-top: 10px !important;
+                padding: 7px 16px;
+                font-size: 0.9rem;
+            }
+
             .contenido-frente-carta {
                 padding-bottom: 125px;
             }
@@ -545,6 +607,13 @@
             .tuberia-carta {
                 width: 110px;
                 height: 82px;
+            }
+
+            .audio-panel {
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+                justify-content: center;
             }
         }
     </style>
@@ -634,11 +703,34 @@
                                         </p>
 
                                         <div class="datos-carta">
-                                            <div><strong>🎂 Cumpleañero:</strong> Pierito</div>
-                                            <div><strong>🎈 Edad:</strong> 6 añitos</div>
-                                            <div><strong>⏰ Hora:</strong> 11:00 a. m.</div>
-                                            <div><strong>📍 Dirección:</strong> Av. Primavera 105, San Borja 15037</div>
-                                            <div><strong>🏰 Diversión:</strong> ¡Habrá grandes juegos!</div>
+                                            <div class="dato-carta">
+                                                <span class="dato-icono">🎂</span>
+                                                <span class="dato-texto"><strong>Cumpleañero:</strong> Pierito</span>
+                                            </div>
+
+                                            <div class="dato-carta">
+                                                <span class="dato-icono">🎈</span>
+                                                <span class="dato-texto"><strong>Edad:</strong> 6 añitos</span>
+                                            </div>
+
+                                            <div class="dato-carta">
+                                                <span class="dato-icono">⏰</span>
+                                                <span class="dato-texto"><strong>Hora:</strong> 2:00 p. m.</span>
+                                            </div>
+
+                                            <div class="dato-carta dato-direccion">
+                                                <span class="dato-icono">📍</span>
+                                                <span class="dato-texto">
+                                                    <strong>Dirección:</strong> Av. Primavera 105, San Borja 15037.
+                                                    <br>
+                                                    <small>Club CENESPAR - MINCETUR</small>
+                                                </span>
+                                            </div>
+
+                                            <div class="dato-carta">
+                                                <span class="dato-icono">🏰</span>
+                                                <span class="dato-texto"><strong>Diversión:</strong> ¡Habrá grandes juegos!</span>
+                                            </div>
                                         </div>
 
                                         <button class="btn btn-light rounded-pill fw-bold mt-3" id="btnVolverCarta">Volver a la portada</button>
@@ -684,7 +776,7 @@
                     <div class="detalle-card text-center">
                         <div class="detalle-icono bg-verde-suave">📍</div>
                         <h3>Dirección</h3>
-                        <p>Av. Primavera 105, San Borja 15037.</p>
+                        <p>Av. Primavera 105, San Borja 15037. Club CENESPAR - MINCETUR</p>
                     </div>
                 </div>
 
@@ -705,7 +797,7 @@
                         <h2 class="titulo-seccion fs-1">QR de ubicación</h2>
                         <p class="texto">Escanea el código para abrir la dirección en Google Maps.</p>
                         <div class="qr-box mt-3" id="qrDireccion"></div>
-                        <p class="texto mt-3 mb-0"><strong>Av. Primavera 105, San Borja 15037</strong></p>
+                        <p class="texto mt-3 mb-0"><strong>Av. Primavera 105, San Borja 15037. Club CENESPAR - MINCETUR</strong></p>
                         <a class="btn btn-fiesta btn-verde mt-3"
                            href="https://www.google.com/maps/search/?api=1&query=Av.%20Primavera%20105,%20San%20Borja%2015037"
                            target="_blank"
@@ -717,11 +809,11 @@
 
                 <div class="col-lg-7">
                     <div class="media-card">
-                        <h2 class="titulo-seccion fs-1">Video de la invitación</h2>
-                        <p class="texto">
+                        <h2 class="titulo-seccion fs-1">Video de invitación</h2>
+                        <!-- <p class="texto">
                             Puedes colocar un video corto de Pierito o un clip de invitación con el nombre
                             <strong>video-cumple.mp4</strong>.
-                        </p>
+                        </p> -->
 
                         <video id="videoFiesta" class="video-fiesta mt-2" controls playsinline poster="img/poster-video.jpg">
                             <source src="video-cumple.mp4" type="video/mp4">
@@ -755,7 +847,7 @@
     </main>
 
     <footer class="footer-fiesta text-center">
-        Cumpleaños de <strong>Pierito</strong> · 6 añitos · 2:00 p. m. · Av. Primavera 105, San Borja 15037 🎂
+        Cumpleaños de <strong>Pierito</strong> · 6 añitos · 2:00 p. m. · Av. Primavera 105, San Borja 15037 - Club CENESPAR - MINCETUR 🎂
     </footer>
 
     <script>
