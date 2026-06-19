@@ -220,43 +220,70 @@
         .btn-azul { background: linear-gradient(135deg, var(--azul), #38bdf8); box-shadow: 0 14px 28px rgba(29, 78, 216, 0.28); }
         .btn-verde { background: linear-gradient(135deg, var(--verde-oscuro), #34d399); box-shadow: 0 14px 28px rgba(5, 122, 85, 0.28); }
 
-        .carta-wrapper { display: flex; justify-content: center; perspective: 1300px; }
+        .carta-wrapper {
+    display: flex;
+    justify-content: center;
+    perspective: 1300px;
+    -webkit-perspective: 1300px;
+}
 
         .carta-clip {
-            width: min(100%, 445px);
-            min-height: 630px;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.85s ease;
-            cursor: pointer;
-        }
+    width: min(100%, 445px);
+    min-height: 630px;
+    position: relative;
+    cursor: pointer;
 
-        .carta-clip.volteada { transform: rotateY(180deg); }
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+
+    transition: transform 0.85s ease;
+    -webkit-transition: -webkit-transform 0.85s ease;
+
+    will-change: transform;
+}
+
+        .carta-clip.volteada {
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+}
 
         .carta-cara {
-            position: absolute;
-            inset: 0;
-            border-radius: 36px;
-            backface-visibility: hidden;
-            overflow: hidden;
-            padding: 32px;
-            border: 8px solid #ffffff;
-            box-shadow: 0 24px 55px rgba(31, 41, 55, 0.22);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
+    position: absolute;
+    inset: 0;
+    border-radius: 36px;
+    overflow: hidden;
+    padding: 32px;
+    border: 8px solid #ffffff;
+    box-shadow: 0 24px 55px rgba(31, 41, 55, 0.22);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+
+    will-change: transform;
+}
+
 
         .carta-frente {
-            background: linear-gradient(180deg, #78d6ff 0%, #b7ecff 45%, #ffe8a3 100%);
-            color: var(--azul);
-            position: relative;
-            justify-content: flex-start;
-            padding-top: 28px;
-            padding-bottom: 0;
-        }
+    background: linear-gradient(180deg, #78d6ff 0%, #b7ecff 45%, #ffe8a3 100%);
+    color: var(--azul);
+    position: relative;
+    justify-content: flex-start;
+    padding-top: 28px;
+    padding-bottom: 0;
+    z-index: 2;
+
+    transform: rotateY(0deg) translateZ(1px);
+    -webkit-transform: rotateY(0deg) translateZ(1px);
+}
         .contenido-frente-carta {
             position: relative;
             z-index: 2;
@@ -266,7 +293,16 @@
             align-items: center;
             padding-bottom: 145px; /* espacio reservado para el tubo */
         }
-        .carta-atras { background: linear-gradient(135deg, var(--rojo), #ff7b54); color: #ffffff; transform: rotateY(180deg); }
+        .carta-atras {
+    background: linear-gradient(135deg, var(--rojo), #ff7b54);
+    color: #ffffff;
+    justify-content: flex-start;
+    padding: 22px 28px 20px 28px;
+    z-index: 1;
+
+    transform: rotateY(180deg) translateZ(1px);
+    -webkit-transform: rotateY(180deg) translateZ(1px);
+}
 
         .bloque-pregunta {
             width: 88px;
@@ -525,27 +561,29 @@
             }
 
             .carta-clip {
-                min-height: 610px;
-            }
+        min-height: 610px;
+    }
 
-            .carta-cara {
-                padding: 20px;
-                border-radius: 28px;
-            }
+    .carta-cara {
+        padding: 20px;
+        border-radius: 28px;
+    }
+
+    .carta-atras {
+        padding: 18px 20px 16px 20px;
+    }
 
             .carta-frente h1 {
                 font-size: 3.8rem;
             }
 
-            .carta-atras {
-                padding: 18px 20px 16px 20px;
-            }
+           
 
             .carta-atras h2 {
-                font-size: 1.8rem;
-                line-height: 0.95;
-                margin-bottom: 10px;
-            }
+        font-size: 1.8rem;
+        line-height: 0.95;
+        margin-bottom: 10px;
+    }
 
             .estrella-carta {
                 font-size: 2.35rem;
